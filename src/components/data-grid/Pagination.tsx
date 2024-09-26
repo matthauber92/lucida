@@ -42,25 +42,25 @@ const Pagination: React.FC<PaginationProps> = ({
           style={{
             backgroundColor: currentPage === page - 1 ? "white" : "transparent",
             color: "#007bff",
-            border: currentPage === page - 1 ? "1px solid #007bff" : "none", // Skinnier 1px border
+            border: currentPage === page - 1 ? "1px solid #007bff" : "none",
             margin: "0 4px",
-            padding: "8px 12px",
+            padding: "4px 8px",
+            height: 30,
             borderRadius: "4px",
             cursor: "pointer",
             fontWeight: currentPage === page - 1 ? "bold" : "normal",
-            fontSize: "16px",
-            transition: "background-color 0.3s ease", // Smooth transition
+            fontSize: "12px",
+            transition: "background-color 0.3s ease",
           }}
-          // Add hover effect for non-current page buttons
           onMouseEnter={(e) => {
             if (currentPage !== page - 1) {
-              (e.target as HTMLButtonElement).style.backgroundColor = "#f0f0f0"; // Light grey on hover
+              (e.target as HTMLButtonElement).style.backgroundColor = "#f0f0f0";
             }
           }}
           onMouseLeave={(e) => {
             if (currentPage !== page - 1) {
               (e.target as HTMLButtonElement).style.backgroundColor =
-                "transparent"; // Revert back to transparent
+                "transparent";
             }
           }}
         >
