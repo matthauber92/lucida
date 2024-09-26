@@ -33,7 +33,7 @@ export const StyledTh = styled("th")(() => ({
     backgroundColor: "#e0e0e0",
   },
   position: "sticky",
-  zIndex: 3, // Make sure fixed headers stay on top
+  zIndex: 3,
 }));
 
 // Table rows and cells
@@ -44,22 +44,32 @@ export const StyledTd = styled("td")(() => ({
   textAlign: "left",
   verticalAlign: "top",
   transition: "background-color 1.3s ease, color 0.3s ease",
-  position: "relative", // Add relative positioning for z-index control
-  zIndex: 1, // Ensure fixed column stays on top, but allow hover
-  backgroundColor: "#fff", // Make sure fixed columns have a solid background
+  position: "relative",
+  zIndex: 1, // Ensure non-fixed cells have a lower z-index than fixed headers/cells
+  backgroundColor: "#fff", // Ensure a solid background for all cells
+  // Apply box-shadow for fixed columns to ensure scrolling content is not visible behind them
+  "&[data-fixed='left']": {
+    position: "sticky",
+    left: 0,
+    zIndex: 2,
+    boxShadow: "2px 0 5px -2px rgba(0, 0, 0, 0.2)", // Right shadow to distinguish fixed columns
+  },
+  "&[data-fixed='right']": {
+    position: "sticky",
+    right: 0,
+    zIndex: 2,
+    boxShadow: "-2px 0 5px -2px rgba(0, 0, 0, 0.2)", // Left shadow for right fixed columns
+  },
 }));
 
 export const StyledTr = styled("tr")(() => ({
   transition: "background-color 0.3s ease, color 0.3s ease",
-  zIndex: 1, // Allow row hover effect to be visible under fixed columns
   "&:hover": {
     backgroundColor: "#f9f9f9",
     color: "#222",
   },
-  // Ensure the hover effect works with fixed columns
   "&:hover td": {
-    backgroundColor: "#f9f9f9",
-    zIndex: 0, // Hovered cell gets higher z-index but is still below the fixed header
+    backgroundColor: "#f9f9f9", // Apply hover effect uniformly across all cells
   },
 }));
 

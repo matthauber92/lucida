@@ -15,7 +15,7 @@ interface RowData {
   [key: string]: string | number | undefined;
 }
 
-interface Column {
+export interface Column {
   id: string;
   label: string;
   renderCell?: (_row: RowData) => React.ReactNode;
@@ -27,6 +27,8 @@ interface TableGridProps {
   data: RowData[];
   dataPerPage?: number;
   enableQuickFilter?: boolean;
+  onRowClick?: (row: RowData) => void;
+  onCellClick?: (row: RowData, field: string) => void;
 }
 
 const TableGrid: React.FC<TableGridProps> = ({
@@ -34,6 +36,8 @@ const TableGrid: React.FC<TableGridProps> = ({
   data,
   dataPerPage = 10,
   enableQuickFilter = true,
+  onRowClick,
+  onCellClick,
 }) => {
   const [sortConfig, setSortConfig] = useState<{
     key: string;
@@ -158,10 +162,16 @@ const TableGrid: React.FC<TableGridProps> = ({
           </thead>
           <tbody>
             {paginatedData.map((row, rowIndex) => (
-              <StyledTr key={rowIndex}>
+              <StyledTr
+                key={rowIndex}
+                onClick={() => onRowClick?.(row)} // Handle row click
+              >
                 {columns.map((column) => (
                   <StyledTd
                     key={column.id}
+                    onClick={(_e) => {
+                      onCellClick?.(row, column.id);
+                    }}
                     style={{
                       position: column.fixed ? "sticky" : "relative",
                       left: column.fixed === "left" ? 0 : undefined,

@@ -1,9 +1,9 @@
 import "./App.css";
 import { Col, Container, Row } from "./components/layout";
-import { TableGrid } from "./components";
+import { TableGrid, Column } from "./components";
 
 function App() {
-  const columns = [
+  const columns: Column[] = [
     { id: "name", label: "Name", fixed: "left" }, // Fixed on the left
     { id: "age", label: "Age" },
     { id: "city", label: "City" },
@@ -193,7 +193,16 @@ function App() {
     <Container>
       <Row spacing={3} rowSpacing={2}>
         <Col xs={12} sm={12} md={12} lg={12}>
-          <TableGrid columns={columns} data={rows} />
+          <TableGrid
+            columns={columns}
+            data={rows}
+            onRowClick={(row) => {
+              console.log("Row clicked:", row);
+            }}
+            onCellClick={(row, field) => {
+              console.log("Cell clicked:", row, "Column ID:", field);
+            }}
+          />
         </Col>
       </Row>
     </Container>
