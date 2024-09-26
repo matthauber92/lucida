@@ -1,8 +1,15 @@
 import React, { useState, useMemo } from "react";
 import Pagination from "./Pagination";
-import { Input } from "../input";
 import { Search, ArrowDropUp, ArrowDropDown } from "@mui/icons-material";
-import "./styles.css";
+import {
+  PaginationContainer,
+  StyledTable,
+  StyledTd,
+  StyledTh,
+  StyledTr,
+  TableContainer,
+} from "./styled-components";
+import { FilterInput } from "../input/styled-components";
 
 interface RowData {
   [key: string]: string | number | undefined;
@@ -82,9 +89,9 @@ const TableGrid: React.FC<TableGridProps> = ({
   const totalPages = Math.ceil(filteredData.length / dataPerPage);
 
   return (
-    <div className="table-container">
+    <TableContainer>
       {enableQuickFilter && (
-        <Input
+        <FilterInput
           value={filter}
           onChange={(e) => {
             setFilter(e.target.value);
@@ -96,20 +103,11 @@ const TableGrid: React.FC<TableGridProps> = ({
         />
       )}
 
-      <table>
+      <StyledTable>
         <thead>
           <tr>
             {columns.map((column) => (
-              <th
-                key={column.id}
-                onClick={() => requestSort(column.id)}
-                style={{
-                  cursor: "pointer",
-                  textAlign: "left",
-                  fontSize: "14px",
-                  padding: "8px",
-                }}
-              >
+              <StyledTh key={column.id} onClick={() => requestSort(column.id)}>
                 <div
                   style={{
                     display: "flex",
@@ -141,33 +139,33 @@ const TableGrid: React.FC<TableGridProps> = ({
                     />
                   </div>
                 </div>
-              </th>
+              </StyledTh>
             ))}
           </tr>
         </thead>
         <tbody>
           {paginatedData.map((row, rowIndex) => (
-            <tr key={rowIndex}>
+            <StyledTr key={rowIndex}>
               {columns.map((column) => (
-                <td key={column.id} style={{ padding: "8px" }}>
+                <StyledTd key={column.id}>
                   {column.renderCell
                     ? column.renderCell(row)
                     : row[column.id] || "N/A"}
-                </td>
+                </StyledTd>
               ))}
-            </tr>
+            </StyledTr>
           ))}
         </tbody>
-      </table>
+      </StyledTable>
 
-      <div className="pagination-container">
+      <PaginationContainer>
         <Pagination
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />
-      </div>
-    </div>
+      </PaginationContainer>
+    </TableContainer>
   );
 };
 

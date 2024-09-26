@@ -1,12 +1,16 @@
 import React from "react";
-import "./styles.css"; // Now using styles.css for the input styles
+import {
+  InputContainer,
+  InputIcon,
+  StyledInputField,
+} from "./styled-components";
 
-interface InputProps {
+export interface InputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
-  variant?: "filled" | "outlined" | "rounded"; // Supported styles
-  icon?: React.ReactNode; // Optional search icon
+  variant?: "filled" | "outlined" | "rounded";
+  icon?: React.ReactNode; // Optional icon
 }
 
 const Input: React.FC<InputProps> = ({
@@ -17,16 +21,16 @@ const Input: React.FC<InputProps> = ({
   icon,
 }) => {
   return (
-    <div className={`input-container ${variant}`}>
-      {icon && <span className="input-icon">{icon}</span>}
-      <input
-        className={`input-field ${variant}`}
+    <InputContainer variant={variant}>
+      {icon && <InputIcon>{icon}</InputIcon>}
+      <StyledInputField
+        variant={variant}
         type="text"
         value={value}
         onChange={onChange}
         placeholder={placeholder}
       />
-    </div>
+    </InputContainer>
   );
 };
 
