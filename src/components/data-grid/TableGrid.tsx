@@ -19,6 +19,7 @@ interface Column {
   id: string;
   label: string;
   renderCell?: (_row: RowData) => React.ReactNode;
+  fixed?: "left" | "right";
 }
 
 interface TableGridProps {
@@ -89,7 +90,8 @@ const TableGrid: React.FC<TableGridProps> = ({
   const totalPages = Math.ceil(filteredData.length / dataPerPage);
 
   return (
-    <TableContainer>
+    <>
+      {/* Quick Filter Input */}
       {enableQuickFilter && (
         <FilterInput
           value={filter}
@@ -103,61 +105,82 @@ const TableGrid: React.FC<TableGridProps> = ({
         />
       )}
 
-      <StyledTable>
-        <thead>
-          <tr>
-            {columns.map((column) => (
-              <StyledTh key={column.id} onClick={() => requestSort(column.id)}>
-                <div
+      {/* Table Container with Horizontal Scroll */}
+      <TableContainer>
+        <StyledTable>
+          <thead>
+            <tr>
+              {columns.map((column) => (
+                <StyledTh
+                  key={column.id}
+                  onClick={() => requestSort(column.id)}
                   style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
+                    position: column.fixed ? "sticky" : "relative",
+                    left: column.fixed === "left" ? 0 : undefined,
+                    right: column.fixed === "right" ? 0 : undefined,
+                    zIndex: column.fixed ? 10 : undefined,
                   }}
                 >
-                  {column.label}
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    <ArrowDropUp
-                      style={{
-                        color:
-                          sortConfig?.key === column.id &&
-                          sortConfig.direction === "asc"
-                            ? "#007bff"
-                            : "#ccc",
-                        fontSize: "16px",
-                      }}
-                    />
-                    <ArrowDropDown
-                      style={{
-                        color:
-                          sortConfig?.key === column.id &&
-                          sortConfig.direction === "desc"
-                            ? "#007bff"
-                            : "#ccc",
-                        fontSize: "16px",
-                      }}
-                    />
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {column.label}
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <ArrowDropUp
+                        style={{
+                          color:
+                            sortConfig?.key === column.id &&
+                            sortConfig.direction === "asc"
+                              ? "#007bff"
+                              : "#ccc",
+                          fontSize: "16px",
+                        }}
+                      />
+                      <ArrowDropDown
+                        style={{
+                          color:
+                            sortConfig?.key === column.id &&
+                            sortConfig.direction === "desc"
+                              ? "#007bff"
+                              : "#ccc",
+                          fontSize: "16px",
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-              </StyledTh>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedData.map((row, rowIndex) => (
-            <StyledTr key={rowIndex}>
-              {columns.map((column) => (
-                <StyledTd key={column.id}>
-                  {column.renderCell
-                    ? column.renderCell(row)
-                    : row[column.id] || "N/A"}
-                </StyledTd>
+                </StyledTh>
               ))}
-            </StyledTr>
-          ))}
-        </tbody>
-      </StyledTable>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedData.map((row, rowIndex) => (
+              <StyledTr key={rowIndex}>
+                {columns.map((column) => (
+                  <StyledTd
+                    key={column.id}
+                    style={{
+                      position: column.fixed ? "sticky" : "relative",
+                      left: column.fixed === "left" ? 0 : undefined,
+                      right: column.fixed === "right" ? 0 : undefined,
+                      zIndex: column.fixed ? 10 : undefined,
+                    }}
+                  >
+                    {column.renderCell
+                      ? column.renderCell(row)
+                      : row[column.id] || "N/A"}
+                  </StyledTd>
+                ))}
+              </StyledTr>
+            ))}
+          </tbody>
+        </StyledTable>
+      </TableContainer>
 
+      {/* Pagination (outside table container to prevent scrolling) */}
       <PaginationContainer>
         <Pagination
           totalPages={totalPages}
@@ -165,7 +188,7 @@ const TableGrid: React.FC<TableGridProps> = ({
           onPageChange={setCurrentPage}
         />
       </PaginationContainer>
-    </TableContainer>
+    </>
   );
 };
 
