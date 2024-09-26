@@ -38,6 +38,15 @@ td {
   color: #333; /* Cell text color */
   text-align: left; /* Left align the cell content */
   vertical-align: top; /* Align content to the top if content wraps */
+  transition:
+    background-color 1.3s ease,
+    color 0.3s ease; /* Add transition for smooth effect */
+}
+
+tr {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease; /* Smooth transition for hover effect */
 }
 
 /* Text color for hovered rows */
